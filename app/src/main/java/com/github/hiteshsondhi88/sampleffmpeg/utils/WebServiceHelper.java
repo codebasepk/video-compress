@@ -59,7 +59,7 @@ public class WebServiceHelper {
                 String.format("firstname=\"%s\"&", firstName) +
                 String.format("lastname=\"%s\"&", lastName) +
                 String.format("email=%s&", email) +
-                String.format("password=\"%s\"", password);
+                String.format("password=%s", password);
     }
 
     public static String getLoginString(

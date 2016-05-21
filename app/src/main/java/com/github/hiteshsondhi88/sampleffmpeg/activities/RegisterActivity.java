@@ -186,7 +186,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     return;
                 } else if (jsonObject.getString("result").equals("success")) {
                     finish();
-                    startActivity(new Intent(getApplicationContext(), WelcomeActivity.class));
+                    startActivity(new Intent(getApplicationContext(), SelectVideo.class));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
