@@ -31,10 +31,15 @@ android {
 }
 
 dependencies {
+    compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.squareup.dagger:dagger-compiler:1.2.2'
     compile 'com.squareup.dagger:dagger:1.2.2'
     compile 'com.jakewharton:butterknife:5.1.2'
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile 'com.squareup.assertj:assertj-android:1.0.0'
+    androidTestCompile ('com.squareup.assertj:assertj-android:1.0.0') {
+        exclude module: 'support-annotations'
+    }
     compile project(':FFmpegAndroid')
+    compile 'com.facebook.android:facebook-android-sdk:4.5.0'
+    compile 'com.github.lzyzsd:circleprogress:1.1.0@aar'
 }

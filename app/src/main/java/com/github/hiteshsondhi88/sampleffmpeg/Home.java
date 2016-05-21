@@ -5,20 +5,13 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import javax.inject.Inject;
-
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-import dagger.ObjectGraph;
 
 import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
@@ -26,15 +19,18 @@ import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 
+import javax.inject.Inject;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import dagger.ObjectGraph;
+
 public class Home extends Activity implements View.OnClickListener {
 
     private static final String TAG = Home.class.getSimpleName();
 
     @Inject
     FFmpeg ffmpeg;
-
-    @InjectView(R.id.command)
-    EditText commandEditText;
 
     @InjectView(R.id.command_output)
     LinearLayout outputLayout;
@@ -60,6 +56,7 @@ public class Home extends Activity implements View.OnClickListener {
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle(null);
+        progressDialog.setCancelable(false);
     }
 
     private void loadFFMpegBinary() {
@@ -142,7 +139,12 @@ public class Home extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.run_command:
-                String cmd = commandEditText.getText().toString();
+                String data  = Environment.getExternalStorageDirectory().getAbsolutePath();
+                System.out.println(data);
+                String cm = "-i "+data+"/DCIM/Camera/video.mp4 -strict experimental -vcodec libx264 -preset" +
+                        " ultrafast -crf 24 -acodec aac -ar 44100 -ac 2 -b:a 96k -s 640x360 -aspect " +
+                        "4:3 "+data+"/DCIM/Camera/test.mp4";
+                String cmd = cm;
                 String[] command = cmd.split(" ");
                 if (command.length != 0) {
                     execFFmpegBinary(command);

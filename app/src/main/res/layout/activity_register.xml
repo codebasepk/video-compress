@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/process_bkg"
+    tools:context=".activities.RegisterActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <ImageButton
+                android:id="@+id/back_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@null"
+                android:src="@drawable/back_button" />
+
+            <ImageView
+                android:id="@+id/logo_image"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="50dp"
+                android:src="@drawable/logo" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/logo_image"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tv_hello"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hello!"
+                    android:textColor="@android:color/white"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:id="@+id/tv_ques"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_hello"
+                    android:layout_marginTop="10dp"
+                    android:text="Enter your details..."
+                    android:textColor="@android:color/white"
+                    android:textSize="15dp" />
+
+
+                <EditText
+                    android:id="@+id/first_name"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:layout_below="@+id/tv_ques"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/et_bg"
+                    android:hint="First name"
+                    android:padding="10dip" />
+
+
+                <EditText
+                    android:id="@+id/last_name"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:layout_below="@+id/first_name"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/et_bg"
+                    android:hint="Last name"
+                    android:padding="10dip" />
+
+                <EditText
+                    android:id="@+id/email_et"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:inputType="textEmailAddress"
+                    android:layout_below="@+id/last_name"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/et_bg"
+                    android:hint="Email"
+                    android:padding="10dip" />
+
+                <EditText
+                    android:id="@+id/password_et"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:layout_below="@+id/email_et"
+                    android:layout_marginTop="5dp"
+                    android:inputType="textPassword"
+                    android:background="@drawable/et_bg"
+                    android:hint="Password"
+                    android:padding="10dip" />
+
+                <Button
+                    android:id="@+id/button_sign_up"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/password_et"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/button_bg"
+                    android:text="Sign up"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

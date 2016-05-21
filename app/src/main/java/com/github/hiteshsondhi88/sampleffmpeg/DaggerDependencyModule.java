@@ -2,21 +2,23 @@ package com.github.hiteshsondhi88.sampleffmpeg;
 
 import android.content.Context;
 
+import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
+import com.github.hiteshsondhi88.sampleffmpeg.activities.CompressActivity;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
 
 @Module(
-        injects = Home.class
+        injects = CompressActivity.class
 )
 @SuppressWarnings("unused")
 public class DaggerDependencyModule {
 
     private final Context context;
 
-    DaggerDependencyModule(Context context) {
+    public DaggerDependencyModule(Context context) {
         this.context = context;
     }
 
