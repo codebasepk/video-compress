@@ -3,6 +3,7 @@ package com.github.hiteshsondhi88.sampleffmpeg.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -36,6 +37,7 @@ public class CompressActivity extends AppCompatActivity implements View.OnClickL
     private DonutProgress progressDialog;
     private long timeInMilliSeconds;
     private TextView processingUpdate;
+    private String outputFile;
     @Inject
     FFmpeg ffmpeg;
 
@@ -57,7 +59,7 @@ public class CompressActivity extends AppCompatActivity implements View.OnClickL
         ObjectGraph.create(new DaggerDependencyModule(this)).inject(this);
         loadFFMpegBinary();
         initUI();
-        String outputFile =  appFolder + File.separator+ "test.mp4";
+        outputFile =  appFolder + File.separator+ Helpers.getTimeStamp()+".mp4";
         Log.i("App_folder", outputFile);
         Log.i("paht", path);
         String cm = "-i " + path + " -strict experimental -vcodec libx264 -preset" +
@@ -97,11 +99,20 @@ public class CompressActivity extends AppCompatActivity implements View.OnClickL
                 @Override
                 public void onFailure(String s) {
                     addTextViewToLayout("FAILED with output : " + s);
+                    Toast.makeText(CompressActivity.this, "There was an error please try Again",
+                            Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getApplicationContext(), SelectVideo.class));
                 }
 
                 @Override
                 public void onSuccess(String s) {
                     addTextViewToLayout("SUCCESS with output : " + s);
+                    progressDialog.setProgress(100);
+                    processingUpdate.setText("Finished");
+                    finish();
+                    Intent intent  = new Intent(getApplicationContext(), GiveTitleActivity.class);
+                    intent.putExtra(AppGlobals.KEY_FILE_TO_UPLOAD, outputFile);
+                    startActivity(intent);
                 }
 
                 @Override
@@ -135,6 +146,7 @@ public class CompressActivity extends AppCompatActivity implements View.OnClickL
 
                 @Override
                 public void onStart() {
+                    Toast.makeText(CompressActivity.this, "please wait a moment", Toast.LENGTH_LONG).show();
                     Log.e(TAG, "Started command : ffmpeg " + command);
                     processingUpdate.setText("Processing");
                 }
@@ -142,8 +154,6 @@ public class CompressActivity extends AppCompatActivity implements View.OnClickL
                 @Override
                 public void onFinish() {
                     Log.d(TAG, "Finished command : ffmpeg " + command);
-                    progressDialog.setProgress(100);
-                    processingUpdate.setText("Finished");
                 }
             });
         } catch (FFmpegCommandAlreadyRunningException e) {

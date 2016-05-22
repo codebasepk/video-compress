@@ -28,6 +28,7 @@ public class DisplayVideoActivity extends AppCompatActivity implements View.OnCl
     private Button chooseButton;
     private ImageView playPauseButton;
     private long timeInmillisec;
+    private LoadThumbnailTask loadThumbnailTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +51,8 @@ public class DisplayVideoActivity extends AppCompatActivity implements View.OnCl
         videoView.setOnPreparedListener(this);
         videoView.setOnCompletionListener(this);
         videoView.seekTo(100);
-        new LoadThumbnailTask().execute();
+        loadThumbnailTask = new LoadThumbnailTask();
+        loadThumbnailTask.execute();
     }
 
     @Override
@@ -60,6 +62,8 @@ public class DisplayVideoActivity extends AppCompatActivity implements View.OnCl
                 finish();
                 break;
             case R.id.choose_button:
+                loadThumbnailTask.cancel(true);
+                finish();
                 Intent intent = new Intent(getApplicationContext(), CompressActivity.class);
                 intent.putExtra(AppGlobals.KEY_TO_BE_PROCESSED_VIDEO_PATH, path);
                 intent.putExtra(AppGlobals.KEY_TIME_IN_MILLIS, timeInmillisec);
@@ -105,6 +109,9 @@ public class DisplayVideoActivity extends AppCompatActivity implements View.OnCl
             Log.i("Time", "time in milliseconds:"+ timeInmillisec + " duration:" + duration+
                     " hours:"+ hours+ " minutes" + minutes+ " seconds:" + seconds+ " ");
             for (int value = 0; value < seconds; value++) {
+                if (isCancelled()) {
+                    break;
+                }
                 Log.i("LOG", " "+ value);
                 publishProgress(mediaMetadataRetriever.getFrameAtTime(value));
                 val = value;
