@@ -18,6 +18,7 @@ public class AppGlobals extends Application {
     public static final String KEY_USER_TOKEN = "token";
     public static final String KEY_VIDEO_PATH = "video_path";
     public static final String KEY_TO_BE_PROCESSED_VIDEO_PATH = "to_be_processed_video";
+    public static final String KEY_TIME_IN_MILLIS = "time_in_millis";
 
     @Override
     public void onCreate() {

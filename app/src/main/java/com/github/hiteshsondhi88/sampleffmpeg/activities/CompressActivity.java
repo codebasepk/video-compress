@@ -22,6 +22,7 @@ import com.github.hiteshsondhi88.sampleffmpeg.utils.Helpers;
 import com.github.lzyzsd.circleprogress.DonutProgress;
 
 import java.io.File;
+import java.util.Arrays;
 
 import javax.inject.Inject;
 
@@ -33,6 +34,8 @@ public class CompressActivity extends AppCompatActivity implements View.OnClickL
     private static final String TAG = CompressActivity.class.getSimpleName();
 
     private DonutProgress progressDialog;
+    private long timeInMilliSeconds;
+    private TextView processingUpdate;
     @Inject
     FFmpeg ffmpeg;
 
@@ -44,16 +47,22 @@ public class CompressActivity extends AppCompatActivity implements View.OnClickL
             appFolder.mkdirs();
         }
         String path = getIntent().getStringExtra(AppGlobals.KEY_TO_BE_PROCESSED_VIDEO_PATH);
+        timeInMilliSeconds = getIntent().getLongExtra(AppGlobals.KEY_TIME_IN_MILLIS, 11L);
+        Log.i("TIME", "" + timeInMilliSeconds);
         setContentView(R.layout.layout_compress_activity);
+        progressDialog = (DonutProgress) findViewById(R.id.donut_progress);
+        processingUpdate = (TextView) findViewById(R.id.processing);
+        progressDialog.setMax(100);
         ButterKnife.inject(this);
         ObjectGraph.create(new DaggerDependencyModule(this)).inject(this);
         loadFFMpegBinary();
         initUI();
-        Log.i("App_folder", String.valueOf(appFolder));
+        String outputFile =  appFolder + File.separator+ "test.mp4";
+        Log.i("App_folder", outputFile);
         Log.i("paht", path);
         String cm = "-i " + path + " -strict experimental -vcodec libx264 -preset" +
                 " ultrafast -crf 24 -acodec aac -ar 44100 -ac 2 -b:a 96k -s 640x360 -aspect " +
-                "4:3 " + appFolder +File.separator+ "test.mp4";
+                "4:3 " + outputFile;
         String cmd = cm;
         String[] command = cmd.split(" ");
         if (command.length != 0) {
@@ -84,6 +93,7 @@ public class CompressActivity extends AppCompatActivity implements View.OnClickL
     private void execFFmpegBinary(final String[] command) {
         try {
             ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
+
                 @Override
                 public void onFailure(String s) {
                     addTextViewToLayout("FAILED with output : " + s);
@@ -96,19 +106,44 @@ public class CompressActivity extends AppCompatActivity implements View.OnClickL
 
                 @Override
                 public void onProgress(String s) {
-                    Log.d(TAG, "Started command : ffmpeg " + command);
-                    addTextViewToLayout("progress : " + s);
-                    Log.i("TAG", s);
+//                    Log.d(TAG, "Started command : ffmpeg " + command);
+//                    addTextViewToLayout("progress : " + s);
+
+                    if (s.contains("speed")) {
+                        String result = s;
+                        result = result.substring(result.indexOf("time") + 5);
+                        result = result.substring(0, result.indexOf("bitrate"));
+                        String[] tokens = result.split(":");
+                        Log.i("SEC_MILIS", Arrays.toString(tokens));
+                        String[] secMiliseconds= tokens[2].split("\\.");
+                        Log.i("secMiliseconds", tokens[2]);
+                        Log.i("SEC_MILIS", Arrays.toString(secMiliseconds));
+                        int secondsToMs = Integer.parseInt(secMiliseconds[0].trim()) * 1000;
+                        int milisecondsPart = Integer.parseInt(secMiliseconds[1].trim());
+                        int minutesToMs = Integer.parseInt(tokens[1].trim()) * 60000;
+                        int hoursToMs = Integer.parseInt(tokens[0].trim()) * 3600000;
+                        long total = secondsToMs + minutesToMs + hoursToMs + milisecondsPart;
+                        Log.i("currentProgress", String.valueOf(progressDialog.getProgress()));
+                        double updateProgress = ((double)total/timeInMilliSeconds)*100;
+                        Log.e("update", (int) updateProgress+ " current "+ progressDialog.getProgress());
+                        if (progressDialog.getProgress() != (int) updateProgress) {
+                            progressDialog.setProgress((int) updateProgress);
+                        }
+                        Log.e("onProgress", String.valueOf(total));
+                    }
                 }
 
                 @Override
                 public void onStart() {
-                    Log.d(TAG, "Started command : ffmpeg " + command);
+                    Log.e(TAG, "Started command : ffmpeg " + command);
+                    processingUpdate.setText("Processing");
                 }
 
                 @Override
                 public void onFinish() {
                     Log.d(TAG, "Finished command : ffmpeg " + command);
+                    progressDialog.setProgress(100);
+                    processingUpdate.setText("Finished");
                 }
             });
         } catch (FFmpegCommandAlreadyRunningException e) {
