@@ -148,7 +148,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Helpers.saveDataToSharedPreferences(AppGlobals.KEY_USER_ACCOUNT_ID, accountId);
                     Helpers.saveDataToSharedPreferences(AppGlobals.KEY_USER_TOKEN, token);
                     Helpers.saveUserLogin(true);
-                    startActivity(new Intent(getApplicationContext(), WelcomeActivity.class));
+                    startActivity(new Intent(getApplicationContext(), SelectVideo.class));
                     finish();
                 }
             } catch (JSONException e) {
