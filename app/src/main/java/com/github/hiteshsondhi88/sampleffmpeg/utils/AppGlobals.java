@@ -19,6 +19,8 @@ public class AppGlobals extends Application {
     public static final String KEY_VIDEO_PATH = "video_path";
     public static final String KEY_TO_BE_PROCESSED_VIDEO_PATH = "to_be_processed_video";
     public static final String KEY_TIME_IN_MILLIS = "time_in_millis";
+    public static final String KEY_FILE_TO_UPLOAD = "file_to_upload";
+    public static final String KEY_FILE_NAME = "file_name";
 
     @Override
     public void onCreate() {

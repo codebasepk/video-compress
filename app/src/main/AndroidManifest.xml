@@ -53,6 +53,11 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.LogoutActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activities.GiveTitleActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activities.UploadActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
     </application>
 
 </manifest>

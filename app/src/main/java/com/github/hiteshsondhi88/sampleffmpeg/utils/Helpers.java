@@ -8,7 +8,9 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 
 import java.io.File;
-
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 
 public class Helpers {
@@ -58,5 +60,12 @@ public class Helpers {
         return Environment.getExternalStorageDirectory().getAbsolutePath()
                 + File.separator+ "Video_compressor";
 
+    }
+
+    public static String getTimeStamp() {
+        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mm_dd_M_yyyy");
+        simpleDateFormat.setTimeZone(TimeZone.getDefault());
+        return simpleDateFormat.format(calendar.getTime());
     }
 }
