@@ -12,8 +12,8 @@ import com.github.hiteshsondhi88.sampleffmpeg.utils.Helpers;
 
 public class LogoutActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Button goToStartButton;
-    Button logoutButton;
+    private Button goToStartButton;
+    private Button logoutButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,13 +35,11 @@ public class LogoutActivity extends AppCompatActivity implements View.OnClickLis
                 break;
 
             case R.id.button_logout:
+                finish();
                 SharedPreferences sharedPreferences = Helpers.getPreferenceManager();
                 sharedPreferences.edit().clear().apply();
-                Intent intent = new Intent(getApplicationContext(), WelcomeActivity.class)
-                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                this.startActivity(intent);
-                this.finish();
+                Intent intent = new Intent(getApplicationContext(), SelectVideo.class);
+                startActivity(intent);
                 break;
         }
     }

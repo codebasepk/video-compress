@@ -14,6 +14,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.github.hiteshsondhi88.sampleffmpeg.R;
+import com.github.hiteshsondhi88.sampleffmpeg.utils.AppGlobals;
 
 
 public class WelcomeActivity extends AppCompatActivity implements View.OnClickListener {
@@ -63,9 +64,17 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
                 if (info != null) {
                     info.setText("Login attempt failed.");
                 }
-
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (AppGlobals.newLogin) {
+            AppGlobals.newLogin = false;
+            finish();
+        }
     }
 
     @Override
