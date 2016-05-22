@@ -29,7 +29,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
-        setContentView(R.layout.activity_welcom);
+        setContentView(R.layout.activity_welcome);
         info = (TextView)findViewById(R.id.info);
         mLoginButton = (LoginButton)findViewById(R.id.login_button);
         loginButton = (Button) findViewById(R.id.button_login);
