@@ -27,6 +27,7 @@ public class DisplayVideoActivity extends AppCompatActivity implements View.OnCl
     private Button cancelButton;
     private Button chooseButton;
     private ImageView playPauseButton;
+    private long timeInmillisec;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +62,7 @@ public class DisplayVideoActivity extends AppCompatActivity implements View.OnCl
             case R.id.choose_button:
                 Intent intent = new Intent(getApplicationContext(), CompressActivity.class);
                 intent.putExtra(AppGlobals.KEY_TO_BE_PROCESSED_VIDEO_PATH, path);
+                intent.putExtra(AppGlobals.KEY_TIME_IN_MILLIS, timeInmillisec);
                 startActivity(intent);
                 break;
             case R.id.play_pause_button:
@@ -95,7 +97,7 @@ public class DisplayVideoActivity extends AppCompatActivity implements View.OnCl
             MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
             mediaMetadataRetriever.setDataSource(path);
             String time = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-            long timeInmillisec = Long.parseLong(time);
+            timeInmillisec = Long.parseLong(time);
             long duration = timeInmillisec / 1000;
             long hours = duration / 3600;
             long minutes = (duration - hours * 3600) / 60;
@@ -103,6 +105,7 @@ public class DisplayVideoActivity extends AppCompatActivity implements View.OnCl
             Log.i("Time", "time in milliseconds:"+ timeInmillisec + " duration:" + duration+
                     " hours:"+ hours+ " minutes" + minutes+ " seconds:" + seconds+ " ");
             for (int value = 0; value < seconds; value++) {
+                Log.i("LOG", " "+ value);
                 publishProgress(mediaMetadataRetriever.getFrameAtTime(value));
                 val = value;
             }

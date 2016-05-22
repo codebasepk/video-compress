@@ -7,8 +7,6 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 
-import com.github.hiteshsondhi88.sampleffmpeg.R;
-
 import java.io.File;
 
 
@@ -58,7 +56,7 @@ public class Helpers {
 
     public static String getFolderPath() {
         return Environment.getExternalStorageDirectory().getAbsolutePath()
-                + File.separator+ AppGlobals.getContext().getResources().getString(R.string.app_name);
+                + File.separator+ "Video_compressor";
 
     }
 }
