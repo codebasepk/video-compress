@@ -1,0 +1,14 @@
+package com.github.hiteshsondhi88.sampleffmpeg.activities;
+
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+
+
+public class GiveTitleActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+}
