@@ -22,6 +22,7 @@ import com.github.hiteshsondhi88.sampleffmpeg.utils.Helpers;
 import com.github.lzyzsd.circleprogress.DonutProgress;
 
 import java.io.File;
+import java.util.Arrays;
 
 import javax.inject.Inject;
 
@@ -34,6 +35,7 @@ public class CompressActivity extends AppCompatActivity implements View.OnClickL
 
     private DonutProgress progressDialog;
     private long timeInMilliSeconds;
+    private TextView processingUpdate;
     @Inject
     FFmpeg ffmpeg;
 
@@ -48,6 +50,9 @@ public class CompressActivity extends AppCompatActivity implements View.OnClickL
         timeInMilliSeconds = getIntent().getLongExtra(AppGlobals.KEY_TIME_IN_MILLIS, 11L);
         Log.i("TIME", "" + timeInMilliSeconds);
         setContentView(R.layout.layout_compress_activity);
+        progressDialog = (DonutProgress) findViewById(R.id.donut_progress);
+        processingUpdate = (TextView) findViewById(R.id.processing);
+        progressDialog.setMax(100);
         ButterKnife.inject(this);
         ObjectGraph.create(new DaggerDependencyModule(this)).inject(this);
         loadFFMpegBinary();
@@ -103,17 +108,42 @@ public class CompressActivity extends AppCompatActivity implements View.OnClickL
                 public void onProgress(String s) {
 //                    Log.d(TAG, "Started command : ffmpeg " + command);
 //                    addTextViewToLayout("progress : " + s);
-                    Log.e("onProgress", s);
+
+                    if (s.contains("speed")) {
+                        String result = s;
+                        result = result.substring(result.indexOf("time") + 5);
+                        result = result.substring(0, result.indexOf("bitrate"));
+                        String[] tokens = result.split(":");
+                        Log.i("SEC_MILIS", Arrays.toString(tokens));
+                        String[] secMiliseconds= tokens[2].split("\\.");
+                        Log.i("secMiliseconds", tokens[2]);
+                        Log.i("SEC_MILIS", Arrays.toString(secMiliseconds));
+                        int secondsToMs = Integer.parseInt(secMiliseconds[0].trim()) * 1000;
+                        int milisecondsPart = Integer.parseInt(secMiliseconds[1].trim());
+                        int minutesToMs = Integer.parseInt(tokens[1].trim()) * 60000;
+                        int hoursToMs = Integer.parseInt(tokens[0].trim()) * 3600000;
+                        long total = secondsToMs + minutesToMs + hoursToMs + milisecondsPart;
+                        Log.i("currentProgress", String.valueOf(progressDialog.getProgress()));
+                        double updateProgress = ((double)total/timeInMilliSeconds)*100;
+                        Log.e("update", (int) updateProgress+ " current "+ progressDialog.getProgress());
+                        if (progressDialog.getProgress() != (int) updateProgress) {
+                            progressDialog.setProgress((int) updateProgress);
+                        }
+                        Log.e("onProgress", String.valueOf(total));
+                    }
                 }
 
                 @Override
                 public void onStart() {
                     Log.e(TAG, "Started command : ffmpeg " + command);
+                    processingUpdate.setText("Processing");
                 }
 
                 @Override
                 public void onFinish() {
                     Log.d(TAG, "Finished command : ffmpeg " + command);
+                    progressDialog.setProgress(100);
+                    processingUpdate.setText("Finished");
                 }
             });
         } catch (FFmpegCommandAlreadyRunningException e) {
