@@ -70,6 +70,13 @@ public class WebServiceHelper {
                 String.format("login_password=%s", password);
     }
 
+    public static String getFbLoginString(
+            String token) {
+
+        return AppGlobals.FB_LOGIN_URL +
+                String.format("fb_access_token=%s", token);
+    }
+
     public static void writeDataToStream(HttpURLConnection connection, String data) {
 
         try {
