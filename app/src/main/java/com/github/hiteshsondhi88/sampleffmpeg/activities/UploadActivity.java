@@ -40,6 +40,8 @@ public class UploadActivity extends AppCompatActivity {
             try {
                 multiPartUtility = new MultiPartUtility(new URL(AppGlobals.UPLOAD_URL));
                 multiPartUtility.addFormField("action", "new_video_to_review");
+                multiPartUtility.addFormField("account_id",
+                        Helpers.getStringFromSharedPreferences(AppGlobals.KEY_USER_ACCOUNT_ID));
                 multiPartUtility.addFormField("add_video_to_this_account_id",
                         Helpers.getStringFromSharedPreferences(AppGlobals.KEY_USER_ACCOUNT_ID));
                 multiPartUtility.addFormField("user_id",
