@@ -14,14 +14,20 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.github.hiteshsondhi88.sampleffmpeg.R;
+import com.github.hiteshsondhi88.sampleffmpeg.utils.AppGlobals;
 import com.github.hiteshsondhi88.sampleffmpeg.utils.Helpers;
 import com.github.hiteshsondhi88.sampleffmpeg.utils.WebServiceHelper;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,9 +43,6 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     private LoginButton mLoginButton;
     private CallbackManager callbackManager;
     private String getToken;
-    private AccessTokenTracker accessTokenTracker;
-    private AccessToken accessToken;
-    private ProfileTracker profileTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,33 +58,13 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         loginButton.setOnClickListener(this);
         singUp.setOnClickListener(this);
 
-        profileTracker = new ProfileTracker() {
-            @Override
-            protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-                System.out.println(currentProfile);
-
-            }
-        };
-
-        accessTokenTracker = new AccessTokenTracker() {
-            @Override
-            protected void onCurrentAccessTokenChanged(
-                    AccessToken oldAccessToken, AccessToken currentAccessToken) {
-                System.out.println(currentAccessToken);
-
-            }
-        };
-
-        accessToken = AccessToken.getCurrentAccessToken();
-        System.out.println(accessToken);
-
         mLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+
                 String userId = loginResult.getAccessToken().getUserId();
                 getToken = loginResult.getAccessToken().getToken();
-                new FbLoignTask(getToken).execute();
-
+                new FbLoginTask(getToken).execute();
             }
 
             @Override
@@ -89,7 +72,6 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
                 if (info != null) {
                     info.setText("Login attempt canceled.");
                 }
-
             }
 
             @Override
@@ -100,21 +82,11 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
 
             }
         });
-
-        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        accessTokenTracker.stopTracking();
-        profileTracker.stopTracking();
     }
 
     @Override
@@ -131,11 +103,11 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    private class FbLoignTask extends AsyncTask<Void, Void, String> {
+    private class FbLoginTask extends AsyncTask<Void, Void, String> {
 
         private boolean internetAvailable = false;
 
-        public FbLoignTask(String token) {
+        public FbLoginTask(String token) {
             super();
             getToken = token;
         }
@@ -155,7 +127,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
                 try {
                     HttpURLConnection connection = WebServiceHelper.openConnectionForUrl(data, "POST");
                     output = WebServiceHelper.readResponseData(connection);
-                    System.out.println(output + "read");
+                    System.out.println(output);
                     return output;
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -167,12 +139,33 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         @Override
         protected void onPostExecute(String aString) {
             super.onPostExecute(aString);
-
             WebServiceHelper.dismissProgressDialog();
             if (!internetAvailable) {
                 Helpers.alertDialog(WelcomeActivity.this, "Connection error",
                         "Check your internet connection");
                 return;
+            }
+            try {
+                JSONObject jsonObject = new JSONObject(aString);
+                if (jsonObject.getString("result").equals("fail")) {
+                    Helpers.alertDialog(WelcomeActivity.this, "Error", jsonObject.getString("message"));
+                    return;
+                } else if (jsonObject.getString("result").equals("success")) {
+                    String public_user_id = jsonObject.getString("public_user_id");
+                    String userId = jsonObject.getString("user_id");
+                    String accountId = jsonObject.getString("account_id");
+                    String token = jsonObject.getString("session_token");
+                    // saveing values
+                    Helpers.saveDataToSharedPreferences(AppGlobals.KEY_USER_PUBLIC_ID, public_user_id);
+                    Helpers.saveDataToSharedPreferences(AppGlobals.KEY_USER_ID, userId);
+                    Helpers.saveDataToSharedPreferences(AppGlobals.KEY_USER_ACCOUNT_ID, accountId);
+                    Helpers.saveDataToSharedPreferences(AppGlobals.KEY_USER_TOKEN, token);
+                    Helpers.saveUserLogin(true);
+                    startActivity(new Intent(getApplicationContext(), SelectVideo.class));
+                    finish();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         }
     }
