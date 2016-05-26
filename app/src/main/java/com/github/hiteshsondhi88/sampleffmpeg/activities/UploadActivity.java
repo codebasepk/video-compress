@@ -3,6 +3,7 @@ package com.github.hiteshsondhi88.sampleffmpeg.activities;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.github.hiteshsondhi88.sampleffmpeg.R;
 import com.github.hiteshsondhi88.sampleffmpeg.utils.AppGlobals;
@@ -49,6 +50,9 @@ public class UploadActivity extends AppCompatActivity {
                 multiPartUtility.addFormField("session_token",
                         Helpers.getStringFromSharedPreferences(AppGlobals.KEY_USER_TOKEN));
                 multiPartUtility.addFormField("title", videoName);
+                Log.i("TAG", "account id "+ Helpers.getStringFromSharedPreferences(AppGlobals.KEY_USER_ACCOUNT_ID) +
+                "user_id " +Helpers.getStringFromSharedPreferences(AppGlobals.KEY_USER_ID) +
+                                "session_token "+ Helpers.getStringFromSharedPreferences(AppGlobals.KEY_USER_TOKEN));
                 multiPartUtility.addFilePart("vid_file", new File(fileToUpload));
                 final byte[] bytes = multiPartUtility.finishFilesUpload();
                 OutputStream os = new FileOutputStream(new File(fileToUpload));

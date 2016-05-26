@@ -1,10 +1,14 @@
 package com.github.hiteshsondhi88.sampleffmpeg.utils;
 
+import android.util.Log;
+
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -39,10 +43,10 @@ public class MultiPartUtility {
         connection = (HttpURLConnection) url.openConnection();
         connection.setConnectTimeout(CONNECT_TIMEOUT);
         connection.setReadTimeout(READ_TIMEOUT);
-        connection.setRequestMethod("GET");
+        connection.setRequestMethod("POST");
         connection.setRequestProperty("Accept-Charset", CHARSET);
         connection.setRequestProperty("Content-Type",
-                "multipart/form-data; boundary=" + boundary);
+                "application/x-www-form-urlencoded; boundary=" + boundary);
         connection.setUseCaches(false);
         connection.setDoInput(true);
         connection.setDoOutput(true);
@@ -127,6 +131,13 @@ public class MultiPartUtility {
         while ((bytesRead = is.read(buffer)) != -1) {
             bytes.write(buffer, 0, bytesRead);
         }
+        BufferedReader r = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        StringBuilder total = new StringBuilder();
+        String line;
+        while ((line = r.readLine()) != null) {
+            total.append(line).append('\n');
+        }
+        Log.i("response", "res"+  total.toString());
         return bytes.toByteArray();
     }
 }
