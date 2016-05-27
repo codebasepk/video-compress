@@ -8,17 +8,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.facebook.AccessToken;
-import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.Profile;
-import com.facebook.ProfileTracker;
-import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.github.hiteshsondhi88.sampleffmpeg.R;
@@ -30,9 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.util.Arrays;
 
 
 public class WelcomeActivity extends AppCompatActivity implements View.OnClickListener {
@@ -79,9 +70,17 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
                 if (info != null) {
                     info.setText("Login attempt failed.");
                 }
-
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (AppGlobals.newLogin) {
+            AppGlobals.newLogin = false;
+            finish();
+        }
     }
 
     @Override

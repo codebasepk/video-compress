@@ -1,10 +1,14 @@
 package com.github.hiteshsondhi88.sampleffmpeg.utils;
 
-import android.util.Base64;
+import android.util.Log;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -39,37 +43,13 @@ public class MultiPartUtility {
         connection = (HttpURLConnection) url.openConnection();
         connection.setConnectTimeout(CONNECT_TIMEOUT);
         connection.setReadTimeout(READ_TIMEOUT);
-        connection.setRequestMethod("GET");
+        connection.setRequestMethod("POST");
         connection.setRequestProperty("Accept-Charset", CHARSET);
         connection.setRequestProperty("Content-Type",
-                "multipart/form-data; boundary=" + boundary);
+                "application/x-www-form-urlencoded; boundary=" + boundary);
         connection.setUseCaches(false);
         connection.setDoInput(true);
         connection.setDoOutput(true);
-        outputStream = connection.getOutputStream();
-        writer = new PrintWriter(new OutputStreamWriter(outputStream, CHARSET),
-                true);
-    }
-
-
-    // constructor used to PUT data on server it can be an ad or user data
-    public MultiPartUtility(final URL url, String method, String userName, String password)
-            throws IOException {
-        postProductProcess = true;
-        start  = System.currentTimeMillis() % 1000;
-        this.url = url;
-        boundary = "---------------------------" + System.currentTimeMillis() % 1000;
-        connection = (HttpURLConnection) url.openConnection();
-        connection.setConnectTimeout(CONNECT_TIMEOUT);
-        connection.setReadTimeout(READ_TIMEOUT);
-        connection.setRequestMethod(method);
-        connection.setRequestProperty("Content-Type", " multipart/form-data; boundary=" + boundary);
-        String authString = userName + ":" + password;
-        String authStringEncoded = Base64.encodeToString(authString.getBytes(), Base64.DEFAULT);
-        connection.setUseCaches(false);
-        connection.setDoInput(true);
-        connection.setDoOutput(true);
-        connection.setRequestProperty("Authorization", "Basic " + authStringEncoded);
         outputStream = connection.getOutputStream();
         writer = new PrintWriter(new OutputStreamWriter(outputStream, CHARSET),
                 true);
@@ -111,5 +91,53 @@ public class MultiPartUtility {
     // add header to printwriter
     public void addHeaderField(String name, String value) {
         writer.append(name).append(": ").append(value).append(CRLF);
+    }
+
+    public byte[] finish() throws IOException {
+        writer.append(CRLF).append("--").append(boundary).append("--")
+                .append(CRLF);
+        writer.close();
+        final int status = connection.getResponseCode();
+        if (status == 201) {
+
+        }
+        InputStream is = connection.getInputStream();
+        final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        final byte[] buffer = new byte[4096];
+        int bytesRead;
+        while ((bytesRead = is.read(buffer)) != -1) {
+            bytes.write(buffer, 0, bytesRead);
+        }
+        return bytes.toByteArray();
+    }
+
+    public byte[] finishFilesUpload() throws IOException {
+        writer.append(CRLF).append("--").append(boundary).append("--")
+                .append(CRLF);
+        writer.close();
+        final int status = connection.getResponseCode();
+        System.out.println(status);
+        if (registrationProcess && status == 201) {
+
+        }
+        if (postProductProcess && status == 201 || status == 200) {
+
+        }
+        InputStream is = connection.getInputStream();
+        System.out.println(is.toString());
+        final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        final byte[] buffer = new byte[4096];
+        int bytesRead;
+        while ((bytesRead = is.read(buffer)) != -1) {
+            bytes.write(buffer, 0, bytesRead);
+        }
+        BufferedReader r = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        StringBuilder total = new StringBuilder();
+        String line;
+        while ((line = r.readLine()) != null) {
+            total.append(line).append('\n');
+        }
+        Log.i("response", "res"+  total.toString());
+        return bytes.toByteArray();
     }
 }

@@ -59,7 +59,7 @@
                 android:layout_marginLeft="10dp"
                 android:clickable="true"
                 android:text="@string/sign_up_string"
-                android:textColor="@android:color/holo_blue_dark"
+                android:textColor="#237ea0"
                 android:textSize="24sp" />
 
             <TextView

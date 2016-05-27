@@ -27,16 +27,15 @@ public class SelectVideo extends Activity implements View.OnClickListener {
     private Button selectVideo;
     private Button hamburger;
     private final int PICK_VIDEO = 0;
-    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     private static String videoPath = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.layout_select_video);
         if (!Helpers.isUserLoggedIn()) {
             startActivity(new Intent(getApplicationContext(), WelcomeActivity.class));
         }
-        setContentView(R.layout.layout_select_video);
         hamburger = (Button) findViewById(R.id.hamburger);
         selectVideo = (Button) findViewById(R.id.select_video_button);
         selectVideo.setOnClickListener(this);
@@ -66,6 +65,7 @@ public class SelectVideo extends Activity implements View.OnClickListener {
 //                }
                 break;
             case R.id.hamburger:
+                finish();
                 startActivity(new Intent(getApplicationContext(), LogoutActivity.class));
                 break;
         }
@@ -139,21 +139,6 @@ public class SelectVideo extends Activity implements View.OnClickListener {
                     Toast.LENGTH_LONG).show();
         }
         Log.i("TAG", videoPath);
-    }
-
-    public String getRealPathFromURI(Context context, Uri contentUri) {
-        Cursor cursor = null;
-        try {
-            String[] proj = { MediaStore.Video.Media.DATA };
-            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
     }
 
     private static String getPathDeprecated(Context ctx, Uri uri) {

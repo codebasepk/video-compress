@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -138,6 +139,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Helpers.alertDialog(LoginActivity.this, "Error", jsonObject.getString("message"));
                     return;
                 } else if (jsonObject.getString("result").equals("success")) {
+                    Log.i("TAG", String.valueOf(jsonObject));
                     String public_user_id = jsonObject.getString("public_user_id");
                     String userId = jsonObject.getString("user_id");
                     String accountId = jsonObject.getString("account_id");
@@ -149,6 +151,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Helpers.saveDataToSharedPreferences(AppGlobals.KEY_USER_TOKEN, token);
                     Helpers.saveUserLogin(true);
                     startActivity(new Intent(getApplicationContext(), SelectVideo.class));
+                    AppGlobals.newLogin = true;
                     finish();
                 }
             } catch (JSONException e) {
