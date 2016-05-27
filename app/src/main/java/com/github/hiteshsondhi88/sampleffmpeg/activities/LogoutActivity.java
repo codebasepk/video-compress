@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
 import com.github.hiteshsondhi88.sampleffmpeg.R;
 import com.github.hiteshsondhi88.sampleffmpeg.utils.Helpers;
 
@@ -19,6 +21,7 @@ public class LogoutActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logout);
+        FacebookSdk.sdkInitialize(getApplicationContext());
         goToStartButton = (Button) findViewById(R.id.button_start);
         logoutButton = (Button) findViewById(R.id.button_logout);
         goToStartButton.setOnClickListener(this);
@@ -35,7 +38,7 @@ public class LogoutActivity extends AppCompatActivity implements View.OnClickLis
                 break;
 
             case R.id.button_logout:
-                finish();
+                LoginManager.getInstance().logOut();
                 SharedPreferences sharedPreferences = Helpers.getPreferenceManager();
                 sharedPreferences.edit().clear().apply();
                 Intent intent = new Intent(getApplicationContext(), SelectVideo.class);
