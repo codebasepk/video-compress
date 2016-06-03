@@ -22,8 +22,9 @@ public class AppGlobals extends Application {
     public static final String KEY_TIME_IN_MILLIS = "time_in_millis";
     public static final String KEY_FILE_TO_UPLOAD = "file_to_upload";
     public static final String KEY_FILE_NAME = "file_name";
-    public static final String UPLOAD_URL = "http://videocco.com/test/uploadAndroid.php";
+    public static final String UPLOAD_URL = "http://videocco.com/mobile/mobile.php";
     public static boolean newLogin = false;
+    public static final String FULL_TOKEN = "full_token";
 
     @Override
     public void onCreate() {

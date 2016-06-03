@@ -5,27 +5,53 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.text.TextUtils;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.CookieManager;
+import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 
 public class WebServiceHelper {
 
     private static ProgressDialog progressDialog;
+    private static final String COOKIES_HEADER = "Set-Cookie";
+    public static final String COOKIE = "Cookie";
 
     public static HttpURLConnection openConnectionForUrl(String targetUrl, String method)
             throws IOException {
+        CookieManager cookieManager = new CookieManager();
         URL url = new URL(targetUrl);
         System.out.println(targetUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestProperty("Content-Type", "application/json");
         connection.setRequestProperty("charset", "utf-8");
         connection.setRequestMethod(method);
+        Map<String, List<String>> headerFields = connection.getHeaderFields();
+        List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
+        if (cookiesHeader != null) {
+            Log.i("Login / Signup", "cooker header not null");
+            for (String cookie : cookiesHeader) {
+                Log.i("Login / SignUp", "adding cookie" + cookie);
+                cookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
+            }
+            if (cookieManager.getCookieStore().getCookies().size() > 0) {
+                //While joining the Cookies, use ',' or ';' as needed. Most of the server are using ';'
+//                connection.setRequestProperty(WebServiceHelper.COOKIE ,
+//                        TextUtils.join(";", cookieManager.getCookieStore().getCookies()));
+                Helpers.saveDataToSharedPreferences(AppGlobals.FULL_TOKEN,
+                        TextUtils.join(";", cookieManager.getCookieStore().getCookies()));
+                Log.i("Header"," test " + TextUtils.join(";", cookieManager.getCookieStore().getCookies()));
+            }
+        }
         return connection;
     }
 

@@ -37,7 +37,7 @@ public class MultiPartUtility {
     // Method use for registration
     public MultiPartUtility(final URL url) throws IOException {
         registrationProcess = true;
-        start  = System.currentTimeMillis() % 1000;
+        start = System.currentTimeMillis() % 1000;
         this.url = url;
         boundary = "---------------------------" + System.currentTimeMillis() % 1000;
         connection = (HttpURLConnection) url.openConnection();
@@ -46,7 +46,9 @@ public class MultiPartUtility {
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Accept-Charset", CHARSET);
         connection.setRequestProperty("Content-Type",
-                "application/x-www-form-urlencoded; boundary=" + boundary);
+                "multipart/form-data; boundary=" + boundary);
+        connection.setRequestProperty(WebServiceHelper.COOKIE,
+                Helpers.getStringFromSharedPreferences(AppGlobals.FULL_TOKEN));
         connection.setUseCaches(false);
         connection.setDoInput(true);
         connection.setDoOutput(true);
@@ -124,7 +126,7 @@ public class MultiPartUtility {
 
         }
         InputStream is = connection.getInputStream();
-        System.out.println(is.toString());
+        Log.i("TAG", WebServiceHelper.readResponseData(connection));
         final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         final byte[] buffer = new byte[4096];
         int bytesRead;
@@ -137,7 +139,7 @@ public class MultiPartUtility {
         while ((line = r.readLine()) != null) {
             total.append(line).append('\n');
         }
-        Log.i("response", "res"+  total.toString());
+        Log.i("response", "res" + total.toString());
         return bytes.toByteArray();
     }
 }

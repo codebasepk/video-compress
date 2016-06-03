@@ -21,6 +21,7 @@ import com.github.hiteshsondhi88.sampleffmpeg.R;
 import com.github.hiteshsondhi88.sampleffmpeg.utils.AppGlobals;
 import com.github.hiteshsondhi88.sampleffmpeg.utils.Helpers;
 import com.github.lzyzsd.circleprogress.DonutProgress;
+import com.google.common.io.Files;
 
 import java.io.File;
 import java.util.Arrays;
@@ -59,19 +60,38 @@ public class CompressActivity extends AppCompatActivity implements View.OnClickL
         ObjectGraph.create(new DaggerDependencyModule(this)).inject(this);
         loadFFMpegBinary();
         initUI();
-        outputFile =  appFolder + File.separator+ Helpers.getTimeStamp()+".mp4";
+        String ext = Files.getFileExtension(path);
+        Log.i("EXT", ext);
+        outputFile =  appFolder + File.separator+ Helpers.getTimeStamp()+"."+ext;
         Log.i("App_folder", outputFile);
-        Log.i("paht", path);
-        String cm = "-i " + path + " -strict experimental -vcodec libx264 -preset" +
-                " ultrafast -crf 24 -acodec aac -ar 44100 -ac 2 -b:a 96k -s 640x360 -aspect " +
-                "4:3 " + outputFile;
-        String cmd = cm;
-        String[] command = cmd.split(" ");
+        Log.i("path", path);
+        Log.i("TAG", Arrays.toString(getConversionCommand(path, outputFile)));
+//        String cm = "-i " + path + " -strict experimental -vcodec libx264 -preset" +
+//                " ultrafast -crf 24 -acodec aac -ar 44100 -ac 2 -b:a 96k -s 640x360 -aspect " +
+//                "4:3 " + outputFile;
+//        String cmd = cm;
+        String[] command = getConversionCommand(path, outputFile);
+        Log.i("Command", Arrays.toString(command));
         if (command.length != 0) {
             execFFmpegBinary(command);
         } else {
             Toast.makeText(CompressActivity.this, getString(R.string.empty_command_toast), Toast.LENGTH_LONG).show();
         }
+    }
+
+    private String[] getConversionCommand(String path, String outputFile) {
+        int arrayLength = 3;
+        String command = "-strict experimental -vcodec libx264 -preset "
+                + "ultrafast -crf 24 -acodec aac -ar 44100 -ac 2 -b:a 96k -s 640x360 -aspect "
+                + "4:3";
+        String[] splitData = command.split(" ");
+        arrayLength += splitData.length;
+        String[] realCommand = new String[arrayLength];
+        realCommand[0] = "-i";
+        realCommand[1] = path;
+        System.arraycopy(splitData, 0, realCommand, 2, splitData.length);
+        realCommand[arrayLength - 1] = outputFile;
+        return realCommand;
     }
 
     private void initUI() {
