@@ -54,15 +54,7 @@ public class SelectVideo extends Activity implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.select_video_button:
-//                if (ContextCompat.checkSelfPermission(SelectVideo.this,
-//                        Manifest.permission.READ_EXTERNAL_STORAGE)
-//                        != PackageManager.PERMISSION_GRANTED) {
-//                    ActivityCompat.requestPermissions(SelectVideo.this,
-//                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-//                            MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-//                } else {
                     openPictures();
-//                }
                 break;
             case R.id.hamburger:
                 finish();
