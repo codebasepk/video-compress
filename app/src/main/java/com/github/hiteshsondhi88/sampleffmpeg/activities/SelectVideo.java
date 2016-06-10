@@ -36,7 +36,7 @@ public class SelectVideo extends Activity implements View.OnClickListener {
         if (!Helpers.isUserLoggedIn()) {
             startActivity(new Intent(getApplicationContext(), WelcomeActivity.class));
         }
-        hamburger = (Button) findViewById(R.id.hamburger);
+        hamburger = (Button) findViewById(R.id.hamburger_select_video);
         selectVideo = (Button) findViewById(R.id.select_video_button);
         selectVideo.setOnClickListener(this);
         hamburger.setOnClickListener(this);
@@ -56,30 +56,11 @@ public class SelectVideo extends Activity implements View.OnClickListener {
             case R.id.select_video_button:
                     openPictures();
                 break;
-            case R.id.hamburger:
-                finish();
+            case R.id.hamburger_select_video:
                 startActivity(new Intent(getApplicationContext(), LogoutActivity.class));
                 break;
         }
     }
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        switch (requestCode) {
-//            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
-//                // If request is cancelled, the result arrays are empty.
-//                if (grantResults.length > 0
-//                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    Log.i("TAG", "Permission granted");
-//                    openPictures();
-//                } else {
-//                    Toast.makeText(SelectVideo.this.getApplicationContext(), "Permission denied!"
-//                            , Toast.LENGTH_LONG).show();
-//                }
-//                break;
-//        }
-//    }
 
     private void openPictures() {
         if (Build.VERSION.SDK_INT < 19) {
@@ -113,19 +94,6 @@ public class SelectVideo extends Activity implements View.OnClickListener {
                 startActivity(intent);
 
             }
-//            else {
-//                if (data.getClipData() != null) {
-//                    Log.i("TAG", "else part");
-//                    ClipData mClipData = data.getClipData();
-//                    for (int i = 0; i < mClipData.getItemCount(); i++) {
-//
-//                        ClipData.Item item = mClipData.getItemAt(i);
-//                        Uri uri = item.getUri();
-//                        videoPath = getImagePath(uri);
-//                        // Get the cursor
-//                    }
-//                }
-//            }
         } else {
             Toast.makeText(SelectVideo.this, "You haven't picked any video",
                     Toast.LENGTH_LONG).show();

@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,7 +30,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import dagger.ObjectGraph;
 
-public class CompressActivity extends AppCompatActivity implements View.OnClickListener {
+public class CompressActivity extends AppCompatActivity {
 
     private static final String TAG = CompressActivity.class.getSimpleName();
 
@@ -66,10 +65,6 @@ public class CompressActivity extends AppCompatActivity implements View.OnClickL
         Log.i("App_folder", outputFile);
         Log.i("path", path);
         Log.i("TAG", Arrays.toString(getConversionCommand(path, outputFile)));
-//        String cm = "-i " + path + " -strict experimental -vcodec libx264 -preset" +
-//                " ultrafast -crf 24 -acodec aac -ar 44100 -ac 2 -b:a 96k -s 640x360 -aspect " +
-//                "4:3 " + outputFile;
-//        String cmd = cm;
         String[] command = getConversionCommand(path, outputFile);
         Log.i("Command", Arrays.toString(command));
         if (command.length != 0) {
@@ -95,7 +90,6 @@ public class CompressActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void initUI() {
-//        runButton.setOnClickListener(this);
         progressDialog = (DonutProgress) findViewById(R.id.donut_progress);
     }
 
@@ -137,9 +131,6 @@ public class CompressActivity extends AppCompatActivity implements View.OnClickL
 
                 @Override
                 public void onProgress(String s) {
-//                    Log.d(TAG, "Started command : ffmpeg " + command);
-//                    addTextViewToLayout("progress : " + s);
-
                     if (s.contains("speed")) {
                         String result = s;
                         result = result.substring(result.indexOf("time") + 5);
@@ -204,23 +195,8 @@ public class CompressActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
-    public void onClick(View v) {
-//        switch (v.getId()) {
-//            case R.id.run_command:
-//                String data  = Environment.getExternalStorageDirectory().getAbsolutePath();
-//                System.out.println(data);
-//                String cm = "-i "+data+"/DCIM/Camera/video.mp4 -strict experimental -vcodec libx264 -preset" +
-//                        " ultrafast -crf 24 -acodec aac -ar 44100 -ac 2 -b:a 96k -s 640x360 -aspect " +
-//                        "4:3 "+data+"/DCIM/Camera/test.mp4";
-//                String cmd = cm;
-//                String[] command = cmd.split(" ");
-//                if (command.length != 0) {
-//                    execFFmpegBinary(command);
-//                } else {
-//                    Toast.makeText(Home.this, getString(R.string.empty_command_toast), Toast.LENGTH_LONG).show();
-//                }
-//                break;
-//        }
-//    }
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }
