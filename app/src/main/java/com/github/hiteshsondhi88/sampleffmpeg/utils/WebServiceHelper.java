@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -44,9 +43,6 @@ public class WebServiceHelper {
                 cookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
             }
             if (cookieManager.getCookieStore().getCookies().size() > 0) {
-                //While joining the Cookies, use ',' or ';' as needed. Most of the server are using ';'
-//                connection.setRequestProperty(WebServiceHelper.COOKIE ,
-//                        TextUtils.join(";", cookieManager.getCookieStore().getCookies()));
                 Helpers.saveDataToSharedPreferences(AppGlobals.FULL_TOKEN,
                         TextUtils.join(";", cookieManager.getCookieStore().getCookies()));
                 Log.i("Header"," test " + TextUtils.join(";", cookieManager.getCookieStore().getCookies()));
@@ -101,18 +97,6 @@ public class WebServiceHelper {
 
         return AppGlobals.FB_LOGIN_URL +
                 String.format("fb_access_token=%s", token);
-    }
-
-    public static void writeDataToStream(HttpURLConnection connection, String data) {
-
-        try {
-            DataOutputStream out = new DataOutputStream(connection.getOutputStream());
-            out.writeBytes(data);
-            out.flush();
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public static String readResponseData(HttpURLConnection connection) {

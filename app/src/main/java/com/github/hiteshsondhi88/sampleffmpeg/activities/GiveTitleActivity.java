@@ -38,6 +38,7 @@ public class GiveTitleActivity extends AppCompatActivity implements View.OnClick
                             Toast.LENGTH_SHORT).show();
                     return;
                 } else if (!title.trim().isEmpty()) {
+                    finish();
                     Intent intent = new Intent(getApplicationContext(), UploadActivity.class);
                     intent.putExtra(AppGlobals.KEY_FILE_TO_UPLOAD, fileToUpload);
                     intent.putExtra(AppGlobals.KEY_FILE_NAME, title);

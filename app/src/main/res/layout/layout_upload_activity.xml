@@ -18,7 +18,7 @@
         android:layout_marginTop="75dp" />
 
     <com.github.lzyzsd.circleprogress.DonutProgress
-        android:id="@+id/progress"
+        android:id="@+id/upload_progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         custom:donut_text_size="30sp"
@@ -27,6 +27,7 @@
         custom:donut_unfinished_color="#A6ABFD"
         custom:donut_finished_color="#0E82E7"
         custom:donut_progress="0"
+        custom:donut_max="100"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 

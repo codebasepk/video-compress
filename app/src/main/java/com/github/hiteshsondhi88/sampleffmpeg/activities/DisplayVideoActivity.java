@@ -56,6 +56,12 @@ public class DisplayVideoActivity extends AppCompatActivity implements View.OnCl
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        loadThumbnailTask.cancel(true);
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.cancel_button:
