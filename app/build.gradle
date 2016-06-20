@@ -5,11 +5,11 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion as String
 
     defaultConfig {
-        applicationId "com.github.hiteshsondhi88.sampleffmpeg"
-        minSdkVersion rootProject.ext.minSdkVersion as Integer
+        applicationId "com.Videocco.ffmpeg"
+        minSdkVersion 16
         targetSdkVersion rootProject.ext.targetSdkVersion as Integer
-        versionCode rootProject.ext.versionCode as Integer
-        versionName rootProject.ext.versionName as String
+        versionCode 2
+        versionName "0.2"
     }
 
     sourceSets.main {
