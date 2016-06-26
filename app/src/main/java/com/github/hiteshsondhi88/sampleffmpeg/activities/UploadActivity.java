@@ -56,6 +56,7 @@ public class UploadActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
             HttpURLConnection.setFollowRedirects(false);
+            responseBuilder = new StringBuilder();
             HttpURLConnection connection = null;
             File file = new File(fileToUpload);
             String fileName = file.getName();
